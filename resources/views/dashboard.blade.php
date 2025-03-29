@@ -26,11 +26,11 @@
                         @csrf
                     </form>
                     <div class="mt-8 flex justify-center space-x-4">
-                        <a href="newService"
+                        <a href="newWork"
                             class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg">
                             {{ __('إضافة عمل جديد') }}
                         </a>
-                        <a href="newWork"
+                        <a href="newServices"
                             class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg">
                             {{ __('إضافة خدمة جديدة') }}
                         </a>

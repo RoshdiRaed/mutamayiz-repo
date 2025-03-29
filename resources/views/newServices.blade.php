@@ -11,36 +11,40 @@
                         </svg>
                         {{ __('العودة إلى لوحة التحكم') }}
                     </a>
-                    <h2 class="text-3xl font-extrabold mb-6">{{ __('إضافة عمل جديد') }}</h2>
-                    <p class="text-xl mb-6">{{ __('قم بكتابة محتوى العمل الجديد والوصف والصور') }}</p>
-
-                    <!-- Form for new work -->
-                    <form action="{{ route('storeWork') }}" method="POST" enctype="multipart/form-data">
+                    <h2 class="text-3xl font-extrabold mb-6">{{ __('إضافة خدمة') }}</h2>
+                    <p class="text-xl mb-6">{{ __('قم بكتابة المحتوى الخدمة الجديدة والوصف والصور') }}</p>
+                    <form action="{{ route('services.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="mb-6">
                             <input type="text" name="title" id="titleInput"
                                 class="w-full border border-gray-300 dark:border-gray-700 rounded-lg p-3 text-gray-900 dark:text-gray-100"
-                                placeholder="{{ __('أدخل عنوان الصورة') }}" required>
+                                placeholder="{{ __('أدخل عنوان الخدمة') }}" required>
                         </div>
+
                         <div class="mb-6">
                             <textarea name="description" id="descriptionInput"
                                 class="w-full border border-gray-300 dark:border-gray-700 rounded-lg p-3 text-gray-900 dark:text-gray-100"
-                                placeholder="{{ __('أدخل وصف الصورة') }}" rows="4" required></textarea>
+                                placeholder="{{ __('أدخل وصف الخدمة') }}" rows="4" required></textarea>
                         </div>
+
                         <p class="text-xl mb-6">{{ __('قم بسحب وإفلات الصور هنا أو اخترها من جهازك') }}</p>
                         <div id="dropzone"
                             class="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-6 cursor-pointer hover:border-blue-500 transition"
                             ondrop="handleDrop(event)" ondragover="event.preventDefault()">
                             <input type="file" name="images[]" id="imageInput" class="hidden" accept="image/*"
                                 multiple onchange="handleFiles(this.files)" required>
-                            <p class="text-gray-500 dark:text-gray-400">{{ __('اسحب الصور هنا أو انقر لاختيارها') }}</p>
+                            <p class="text-gray-500 dark:text-gray-400">{{ __('اسحب الصور هنا أو انقر لاختيارها') }}
+                            </p>
                         </div>
+
+                        <!-- Image preview section -->
                         <div id="preview" class="grid grid-cols-3 gap-4 mt-6">
                             <!-- Preview images will be displayed here -->
                         </div>
+
                         <button type="submit"
                             class="mt-6 bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg">
-                            {{ __('نشر العمل') }}
+                            {{ __('نشر الخدمة') }}
                         </button>
                     </form>
                 </div>
@@ -48,7 +52,6 @@
         </div>
     </div>
 
-    <!-- Success Popup -->
     @if (session('success'))
         <div id="toast-notification"
             class="fixed bottom-4 right-4 bg-white dark:bg-purple-900 rounded-lg shadow-lg p-4 transform translate-y-full opacity-0 transition-all duration-300 z-50 max-w-md">
@@ -123,7 +126,6 @@
     @endif
 
 
-
     <script>
         const dropzone = document.getElementById('dropzone');
         const imageInput = document.getElementById('imageInput');
@@ -132,7 +134,7 @@
         dropzone.addEventListener('click', () => imageInput.click());
 
         function handleFiles(files) {
-            preview.innerHTML = ''; // Clear existing preview
+            preview.innerHTML = '';
             Array.from(files).forEach(file => {
                 if (file.type.startsWith('image/')) {
                     const reader = new FileReader();
