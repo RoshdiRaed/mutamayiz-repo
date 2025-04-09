@@ -10,8 +10,8 @@ class WorkController extends Controller
     // Display a listing of all work
     public function index()
     {
-        $work = Work::all();
-        return view('newWork', compact('work'));
+        $works = Work::all() ?? collect();  // Ensure $works is never null
+        return view('works', compact('works'));
     }
 
     // Show the form to create a new work
@@ -26,7 +26,7 @@ class WorkController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10048',
         ]);
 
         $imagePaths = [];

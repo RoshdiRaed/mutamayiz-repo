@@ -8,16 +8,20 @@ use App\Models\Service;
 class ServicesController extends Controller
 {
     public function index()
-{
-    $services = Service::all(); // Fetch all services
-    return view('newServices', compact('services'));
-}
+    {
+        $services = Service::all();
+        return view('services', compact('services')); // Ensure 'services.blade.php' exists
+    }
 
+    public function indexone()
+    {
+        $services = Service::all();
+        return view('home', compact('services'));
+    }
 
     public function create()
     {
-        // Show the form for creating a new resource
-        return view('newServices');
+        return view('newServices'); // Ensure 'newServices.blade.php' exists
     }
 
     public function store(Request $request)
@@ -25,7 +29,7 @@ class ServicesController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:10048',
         ]);
 
         $imagePaths = [];
@@ -57,7 +61,6 @@ class ServicesController extends Controller
         return view('newServices', compact('service'));
     }
 
-
     public function update(Request $request, $id)
     {
         $service = Service::findOrFail($id);
@@ -68,18 +71,27 @@ class ServicesController extends Controller
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
+        $imagePaths = json_decode($service->images, true) ?? [];
+        if ($request->hasFile('images')) {
+            $imagePaths = [];
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('services', 'public');
+                $imagePaths[] = $path;
+            }
+            $validatedData['images'] = json_encode($imagePaths);
+        }
+
         $service->update($validatedData);
 
-        return redirect()->route('services.index')->with('success', 'Service updated successfully.');
+        return redirect()->route('services.index')->with('success', 'تم تحديث الخدمة بنجاح');
     }
-
-
     public function destroy($id)
     {
         $service = Service::findOrFail($id);
         $service->delete();
 
-        return redirect()->route('services.index')->with('success', 'Service deleted successfully.');
+        return redirect()->route('services.index')->with('success', 'تم حذف الخدمة بنجاح');
     }
-
 }
+
+?>

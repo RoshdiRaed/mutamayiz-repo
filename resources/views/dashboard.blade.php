@@ -18,8 +18,10 @@
                             </a>
                         </div>
                         <div class="mt-4">
-                            <a href="/"
-                                class="text-green-500 hover:underline text-lg font-medium">{{ __('من يحاول التواصل معي →') }}</a>
+                            <a href="{{ route('contacts.index') }}" class="text-green-500 hover:underline text-lg font-medium">
+                                {{ __('من يحاول التواصل معي →') }}
+                            </a>
+
                         </div>
                     </div>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
@@ -30,8 +32,7 @@
                             class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg">
                             {{ __('إضافة عمل جديد') }}
                         </a>
-                        <a href="newServices"
-                            class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg">
+                        <a href="{{ route('services.create') }}" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg">
                             {{ __('إضافة خدمة جديدة') }}
                         </a>
                     </div>

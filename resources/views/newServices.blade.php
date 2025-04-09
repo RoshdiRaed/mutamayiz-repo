@@ -13,10 +13,17 @@
                     </a>
                     <h2 class="text-3xl font-extrabold mb-6">{{ __('إضافة خدمة') }}</h2>
                     <p class="text-xl mb-6">{{ __('قم بكتابة المحتوى الخدمة الجديدة والوصف والصور') }}</p>
-                    <form action="{{ route('services.store') }}" method="POST" enctype="multipart/form-data">
+                    <form
+                        action="{{ isset($service) ? route('services.update', $service->id) : route('services.store') }}"
+                        method="POST" enctype="multipart/form-data">
                         @csrf
+                        @isset($service)
+                            @method('PUT')
+                        @endisset
+
                         <div class="mb-6">
                             <input type="text" name="title" id="titleInput"
+                                value="{{ old('title', $service->title ?? '') }}"
                                 class="w-full border border-gray-300 dark:border-gray-700 rounded-lg p-3 text-gray-900 dark:text-gray-100"
                                 placeholder="{{ __('أدخل عنوان الخدمة') }}" required>
                         </div>
@@ -24,7 +31,7 @@
                         <div class="mb-6">
                             <textarea name="description" id="descriptionInput"
                                 class="w-full border border-gray-300 dark:border-gray-700 rounded-lg p-3 text-gray-900 dark:text-gray-100"
-                                placeholder="{{ __('أدخل وصف الخدمة') }}" rows="4" required></textarea>
+                                placeholder="{{ __('أدخل وصف الخدمة') }}" rows="4" required>{{ old('description', $service->description ?? '') }}</textarea>
                         </div>
 
                         <p class="text-xl mb-6">{{ __('قم بسحب وإفلات الصور هنا أو اخترها من جهازك') }}</p>
@@ -32,19 +39,30 @@
                             class="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-6 cursor-pointer hover:border-blue-500 transition"
                             ondrop="handleDrop(event)" ondragover="event.preventDefault()">
                             <input type="file" name="images[]" id="imageInput" class="hidden" accept="image/*"
-                                multiple onchange="handleFiles(this.files)" required>
+                                multiple onchange="handleFiles(this.files)" {{ !isset($service) ? 'required' : '' }}>
                             <p class="text-gray-500 dark:text-gray-400">{{ __('اسحب الصور هنا أو انقر لاختيارها') }}
                             </p>
                         </div>
 
-                        <!-- Image preview section -->
+                        <!-- Existing Image Preview (if editing) -->
+                        @isset($service)
+                            @if ($service->images)
+                                <div class="mt-4">
+                                    <p class="text-gray-500 dark:text-gray-400">{{ __('الصورة الحالية:') }}</p>
+                                    <img src="{{ asset('storage/' . json_decode($service->images)[0]) }}"
+                                        alt="{{ $service->title }}" class="w-32 h-32 object-cover rounded-lg">
+                                </div>
+                            @endif
+                        @endisset
+
+                        <!-- Image preview section for new uploads -->
                         <div id="preview" class="grid grid-cols-3 gap-4 mt-6">
                             <!-- Preview images will be displayed here -->
                         </div>
 
                         <button type="submit"
                             class="mt-6 bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg">
-                            {{ __('نشر الخدمة') }}
+                            {{ isset($service) ? __('نشر التعديلات') : __('نشر الخدمة') }}
                         </button>
                     </form>
                 </div>
@@ -142,6 +160,36 @@
                         const img = document.createElement('img');
                         img.src = e.target.result;
                         img.className = 'w-full h-32 object-cover rounded-lg shadow-md';
+                        preview.appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        function handleDrop(event) {
+            event.preventDefault();
+            const files = event.dataTransfer.files;
+            handleFiles(files);
+        }
+    </script>
+
+    <script>
+        const dropzone = document.getElementById('dropzone');
+        const imageInput = document.getElementById('imageInput');
+        const preview = document.getElementById('preview');
+
+        dropzone.addEventListener('click', () => imageInput.click());
+
+        function handleFiles(files) {
+            preview.innerHTML = '';
+            Array.from(files).forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.className = 'w-32 h-32 object-cover rounded-lg shadow-md';
                         preview.appendChild(img);
                     };
                     reader.readAsDataURL(file);

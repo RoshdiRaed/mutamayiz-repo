@@ -18,17 +18,17 @@
                 <li><a href="/"
                         class="nav-link relative font-medium py-2 hover:text-yellow-300 transition-colors duration-300">الرئيسية</a>
                 </li>
-                <li><a href="/"
+                <li><a href="{{ route('services.index') }}"
                         class="nav-link relative font-medium py-2 hover:text-yellow-300 transition-colors duration-300">خدماتنا</a>
                 </li>
-                <li><a href="/"
+                <li><a href="{{ route('works.index') }}"
                         class="nav-link relative font-medium py-2 hover:text-yellow-300 transition-colors duration-300">أعمالنا</a>
                 </li>
                 <li><a href="/"
                         class="nav-link relative font-medium py-2 hover:text-yellow-300 transition-colors duration-300">من
                         نحن</a></li>
                 <li class="mr-4">
-                    <a href="/"
+                    <a href="/contacts"
                         class="bg-gradient-to-r from-yellow-400 to-yellow-500 text-purple-900 px-6 py-2.5 rounded-lg font-bold hover:from-yellow-500 hover:to-yellow-600 transition duration-300 transform hover:scale-105 hover:shadow-lg">
                         تواصل معنا
                     </a>
@@ -59,10 +59,10 @@
             <li><a href="#"
                     class="text-yellow-300 font-medium hover:scale-105 transform transition-all duration-300 block">الرئيسية</a>
             </li>
-            <li><a href="#"
+            <li><a href="{{ route('services.index') }}"
                     class="hover:text-yellow-300 transition-colors duration-300 hover:scale-105 transform block">خدماتنا</a>
             </li>
-            <li><a href="#"
+            <li><a href="{{ route('works.index') }}"
                     class="hover:text-yellow-300 transition-colors duration-300 hover:scale-105 transform block">أعمالنا</a>
             </li>
             <li><a href="#"

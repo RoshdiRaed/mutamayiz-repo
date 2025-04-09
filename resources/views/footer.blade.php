@@ -65,7 +65,7 @@
 
         <!-- Copyright -->
         <div class="mt-10 text-center text-gray-400 text-sm">
-            &copy; <span id="year"></span> المتميّز للدعاية والإعلان. جميع الحقوق محفوظة.
+             <span id="year"></span> المتميّز للدعاية والإعلان. جميع الحقوق محفوظة &copy; <?php echo date("Y")?>
         </div>
     </div>
 

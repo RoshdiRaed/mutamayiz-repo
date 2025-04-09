@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="برموز للدعاية والإعلان - حلول تسويقية متكاملة">
     <meta name="keywords" content="دعاية, اعلان, تسويق, هوية تجارية">
+    <link rel="icon" type="image/logo.png" href="/image/logo.png">
     <title>المتميّز للدعاية والإعلان</title>
 
     <!-- Styles -->
@@ -13,7 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/logo.png" href="/image/logo.png">
+
     <style>
         .nav-link::after {
             content: '';
