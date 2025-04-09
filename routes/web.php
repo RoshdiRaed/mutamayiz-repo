@@ -32,7 +32,6 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/newServices/{service}', [ServicesController::class, 'destroy'])->name('services.destroy');
 
     // Works Routes
-    Route::resource('works', WorkController::class)->except(['show']); // Resource routes for works
     Route::get('/newWork', [WorkController::class, 'create'])->name('newWork');
     Route::post('/newWork', [WorkController::class, 'store'])->name('storeWork');
     Route::get('/editWork/{id}', [WorkController::class, 'edit'])->name('editWork');
@@ -43,6 +42,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index');
 });
 
+Route::resource('works', WorkController::class)->except(['show']); // Resource routes for works
 Route::post('/contacts', [ContactController::class, 'store'])->name('contacts.store');
 
 
