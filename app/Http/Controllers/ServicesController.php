@@ -29,7 +29,7 @@ class ServicesController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:10048',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,jpeg|max:10048',
         ]);
 
         $imagePaths = [];

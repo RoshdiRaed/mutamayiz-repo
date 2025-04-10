@@ -22,7 +22,7 @@
 
                         <div class="relative p-8 bg-purple-900/80 backdrop-blur-sm rounded-xl shadow-xl transform transition-all duration-500 hover:-translate-y-2 border border-purple-800/50 hover:border-yellow-300/50">
                             <div class="mb-6 relative h-64 overflow-hidden rounded-lg">
-                                <img src="{{ asset('storage/' . (json_decode($service->images)[0] ?? 'default.jpg')) }}"
+                                <img src="{{ asset('storage/' . (json_decode($service->images)[0] ?? './image/default.png')) }}"
                                     alt="{{ $service->title }}"
                                     class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110">
                             </div>
