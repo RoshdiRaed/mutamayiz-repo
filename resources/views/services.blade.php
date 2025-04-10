@@ -93,4 +93,10 @@
             document.getElementById(modalId).classList.add('hidden');
         }
     </script>
+
+<footer>
+    <div class="mt-10 text-center text-gray-400 text-sm mb-10">
+        <span id="year"></span> المتميّز للدعاية والإعلان. جميع الحقوق محفوظة &copy; <?php echo date('Y'); ?>
+    </div>
+</footer>
 </body>

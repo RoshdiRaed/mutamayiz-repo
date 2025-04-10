@@ -14,7 +14,7 @@ class WorkController extends Controller
         return view('works', compact('works'));
     }
 
-    // Show the form to create a new work
+    // Show the form to create a new work or edit an existing one
     public function create()
     {
         return view('newWork');
@@ -43,14 +43,15 @@ class WorkController extends Controller
             'images' => json_encode($imagePaths),
         ]);
 
-        return redirect()->route('newWork')->with('success', 'تم نشر العمل بنجاح');
+        return redirect()->route('works.index')->with('success', 'تم نشر العمل بنجاح');
+
     }
 
     // Show the form to edit a specific work
     public function edit($id)
     {
-        $work = Work::findOrFail($id);
-        return view('editWork', compact('work'));
+        $editWork = Work::findOrFail($id);
+        return view('newWork', compact('editWork'));
     }
 
     // Update an existing work
@@ -59,13 +60,13 @@ class WorkController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,jpeg|max:10048',
         ]);
 
         $work = Work::findOrFail($id);
 
         // Handle image updates if necessary
-        $imagePaths = json_decode($work->images, true);
+        $imagePaths = json_decode($work->images, true) ?? [];
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 $path = $image->store('work', 'public');
@@ -79,7 +80,7 @@ class WorkController extends Controller
             'images' => json_encode($imagePaths),
         ]);
 
-        return redirect()->route('newWork')->with('success', 'تم تحديث العمل بنجاح');
+        return redirect()->route('works.index')->with('success', 'تم حذف العمل بنجاح');
     }
 
     // Delete a specific work
@@ -96,14 +97,13 @@ class WorkController extends Controller
         }
 
         $work->delete();
-
-        return redirect()->route('newWork')->with('success', 'تم حذف العمل بنجاح');
+        return redirect()->route('works.index')->with('success', 'تم حذف العمل بنجاح');
     }
 
     // Show the details of a specific work
     public function show($id)
     {
         $work = Work::findOrFail($id);
-        return view('showWork', compact('work'));
+        return view('works.show', compact('work'));
     }
 }

@@ -24,7 +24,7 @@
                 <li><a href="{{ route('works.index') }}"
                         class="nav-link relative font-medium py-2 hover:text-yellow-300 transition-colors duration-300">أعمالنا</a>
                 </li>
-                <li><a href="/"
+                <li><a href="#story"
                         class="nav-link relative font-medium py-2 hover:text-yellow-300 transition-colors duration-300">من
                         نحن</a></li>
                 <li class="mr-4">

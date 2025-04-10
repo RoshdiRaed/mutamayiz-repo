@@ -1,4 +1,4 @@
-<section class="relative py-0 bg-gradient-to-br overflow-hidden">
+<section id="stroy" class="relative py-0 bg-gradient-to-br overflow-hidden">
     <div class="absolute inset-0">
         <div class="absolute top-0 left-0 w-full h-64 bg-gradient-to-b"></div>
         <div class="absolute bottom-0 right-0 w-96 h-96 bg-[#FFDF20]/10 rounded-full blur-3xl"></div>

@@ -23,7 +23,6 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Services Routes
-    Route::get('/services', [ServicesController::class, 'index'])->name('services.index');
     Route::get('/newServices/create', [ServicesController::class, 'create'])->name('services.create');
     Route::post('/newServices/store', [ServicesController::class, 'store'])->name('services.store');
     Route::get('/newServices/{service}', [ServicesController::class, 'show'])->name('services.show');
@@ -32,18 +31,20 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/newServices/{service}', [ServicesController::class, 'destroy'])->name('services.destroy');
 
     // Works Routes
-    Route::get('/newWork', [WorkController::class, 'create'])->name('newWork');
-    Route::post('/newWork', [WorkController::class, 'store'])->name('storeWork');
-    Route::get('/editWork/{id}', [WorkController::class, 'edit'])->name('editWork');
-    Route::put('/updateWork/{id}', [WorkController::class, 'update'])->name('updateWork');
-    Route::delete('/deleteWork/{id}', [WorkController::class, 'destroy'])->name('deleteWork');
+    Route::middleware(['auth'])->group(function () {
+        Route::resource('works', WorkController::class);
+    });
+
+    Route::middleware(['auth'])->group(function () {
+        Route::resource('works', WorkController::class)->except(['show']);
+    });
 
     // Contact Routes
     Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index');
 });
 
+Route::get('/services', [ServicesController::class, 'index'])->name('services.index');
 Route::resource('works', WorkController::class)->except(['show']); // Resource routes for works
 Route::post('/contacts', [ContactController::class, 'store'])->name('contacts.store');
-
 
 require __DIR__ . '/auth.php';

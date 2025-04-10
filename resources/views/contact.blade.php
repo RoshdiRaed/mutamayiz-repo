@@ -38,7 +38,7 @@
 
                 <!-- New phone number field -->
                 <div class="md:col-span-2">
-                    <input type="text" name="phone" placeholder="رقم الهاتف"
+                    <input type="text" name="phone" placeholder="رقم الهاتف مع مقدمة الواتساب"
                         class="w-full px-4 py-3 rounded-lg bg-purple-800/50 text-white placeholder-gray-400
                         border-2 border-transparent focus:border-yellow-400/50 focus:bg-purple-800/80
                         transition-all duration-300 outline-none">
