@@ -35,7 +35,8 @@
 
                             <!-- Admin Buttons -->
                             @auth
-                                @if (Auth::user()->is_admin)
+                                @if (Auth::user())
+                                {{-- @if (Auth::user()->is_admin) --}}
                                     <div class="mt-4 flex space-x-2">
                                         <a href="{{ route('services.edit', $service->id) }}"
                                             class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded-lg">
@@ -94,9 +95,4 @@
         }
     </script>
 
-<footer>
-    <div class="mt-10 text-center text-gray-400 text-sm mb-10">
-        <span id="year"></span> المتميّز للدعاية والإعلان. جميع الحقوق محفوظة &copy; <?php echo date('Y'); ?>
-    </div>
-</footer>
 </body>
