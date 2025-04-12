@@ -7,10 +7,8 @@ use App\Http\Controllers\ContactController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Service;
 
-Route::get('/', function () {
-    $services = Service::all(); // Fetch all services from the database
-    return view('home', compact('services'));
-});
+Route::get('/', [\App\Http\Controllers\HomeController::class, 'index']);
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');

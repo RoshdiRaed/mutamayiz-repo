@@ -18,7 +18,7 @@
                     animate__animated animate__pulse animate__infinite animate__slower">
                     احصل على استشارة مجانية
                 </a>
-                <a href="#"
+                <a href="{{ route('services.index') }}"
                     class="border-2 border-yellow-300 text-yellow-300 px-6 py-3 rounded-lg font-bold
                     hover:bg-yellow-300 hover:text-purple-900 transition duration-300 text-center">
                     تعرف على خدماتنا
