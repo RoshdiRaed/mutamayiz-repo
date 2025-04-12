@@ -120,13 +120,13 @@
 
                     <!-- Image Grid -->
                     <div class="grid grid-cols-2 gap-4">
-                        <img src="/image/pic1.jpg" alt="Our Journey 1"
+                        <img src="/image/sto1.jpg" alt="Our Journey 1"
                             class="w-full h-48 object-cover rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300">
-                        <img src="/image/pic2.jpg" alt="Our Journey 2"
+                        <img src="/image/stro2.jpg" alt="Our Journey 2"
                             class="w-full h-48 object-cover rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300">
-                        <img src="/image/pic3.jpg" alt="Our Journey 3"
+                        <img src="/image/stro3.jpg" alt="Our Journey 3"
                             class="w-full h-48 object-cover rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300">
-                        <img src="/image/pic4.jpg" alt="Our Journey 4"
+                        <img src="/image/stro4.jpg" alt="Our Journey 4"
                             class="w-full h-48 object-cover rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300">
                     </div>
                 </div>
@@ -138,3 +138,4 @@
         </div>
     </div>
 </section>
+

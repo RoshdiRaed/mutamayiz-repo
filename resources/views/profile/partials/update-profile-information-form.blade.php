@@ -1,5 +1,16 @@
 <section>
+    <div class="flex justify-end rtl:flex-row-reverse mb-4">
+        <a href="{{ route('dashboard') }}"
+            class="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition duration-300 ease-in-out transform hover:translate-x-2 rtl:hover:translate-x-0 rtl:hover:-translate-x-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+            <span class="ml-2 rtl:ml-0 rtl:mr-2">{{ __('العودة إلى لوحة التحكم') }}</span>
+        </a>
+    </div>
     <header>
+
         <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
             {{ __('معلومات الملف الشخصي') }}
         </h2>
