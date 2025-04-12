@@ -31,7 +31,7 @@
                             @endif
 
                             <div class="mb-6 h-64 overflow-hidden rounded-lg relative">
-                                <img src="{{ asset('storage/services/Zvd19w5D33zrlMt3fMeMWmTVioN6OoNJRC4NzNt8.jpg') }}"
+                                <img src="{{ asset('storage/' . (json_decode($service->images)[0] ?? 'image/default.png')) }}"
                                      alt="{{ $service->title }}"
                                      class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110">
                             </div>
