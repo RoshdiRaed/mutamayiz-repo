@@ -86,37 +86,33 @@ class ServicesController extends Controller
 
         $service = Service::findOrFail($id);
 
-        $imagePaths = [];
+        $newImages = [];
 
-        // Handle new uploaded images
+        // رفع الصور الجديدة
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 $path = $image->store('services', 'public');
-                $imagePaths[] = $path;
+                $newImages[] = $path;
             }
         }
 
-        // Handle new image links
+        // روابط الصور الجديدة
         if ($request->has('image_links')) {
             foreach ($request->input('image_links') as $link) {
                 if (!empty($link)) {
-                    $imagePaths[] = $link;
+                    $newImages[] = $link;
                 }
             }
         }
 
-        // Delete old images from storage
-        $oldImages = json_decode($service->images, true) ?? [];
-        foreach ($oldImages as $path) {
-            if (!Str::startsWith($path, ['http://', 'https://']) && Storage::disk('public')->exists($path)) {
-                Storage::disk('public')->delete($path);
-            }
-        }
+        // دمج الصور القديمة التي لم تُحذف يدويًا مع الصور الجديدة
+        $existingImages = $request->input('existing_images', []);
+        $finalImages = array_merge($existingImages, $newImages);
 
         $service->update([
             'title' => $request->input('title'),
             'description' => $request->input('description'),
-            'images' => !empty($imagePaths) ? json_encode($imagePaths) : null,
+            'images' => !empty($finalImages) ? json_encode($finalImages) : null,
         ]);
 
         return redirect()->route('services.index')->with('success', 'تم تحديث الخدمة بنجاح');

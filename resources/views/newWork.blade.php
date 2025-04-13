@@ -1,9 +1,9 @@
 <x-app-layout>
+    
     <div class="py-48">
         <div class="max-w-5xl mx-auto sm:px-8 lg:px-10">
             <div class="bg-white dark:bg-purple-950 overflow-hidden shadow-2xl sm:rounded-xl p-8">
                 <div class="text-center text-gray-900 dark:text-gray-100 relative">
-                    <!-- Pop-up button -->
                     <button id="addLinkButton" class="absolute left-4 top-4 bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg transition">
                         {{ __('إضافة رابط صورة') }}
                     </button>
@@ -23,13 +23,13 @@
                         {{ isset($editWork) ? __('قم بتحديث محتوى العمل والوصف والصور') : __('قم بكتابة محتوى العمل الجديد والوصف والصور') }}
                     </p>
 
-                    <!-- Form for new/edit work -->
                     <form action="{{ isset($editWork) ? route('works.update', $editWork->id) : route('works.store') }}"
                           method="POST" enctype="multipart/form-data">
                         @csrf
                         @if(isset($editWork))
                             @method('PUT')
                         @endif
+
                         <div class="mb-6">
                             <input type="text" name="title" id="titleInput"
                                    value="{{ isset($editWork) ? $editWork->title : old('title') }}"
@@ -39,6 +39,7 @@
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                             @enderror
                         </div>
+
                         <div class="mb-6">
                             <textarea name="description" id="descriptionInput"
                                       class="w-full border border-gray-300 dark:border-gray-700 rounded-lg p-3 text-gray-900 dark:text-gray-100"
@@ -53,15 +54,29 @@
                             <h3 class="text-2xl font-bold mb-4">{{ __('إضافة رابط صورة') }}</h3>
                             <div id="linkInputs" class="space-y-4">
                                 @if(isset($editWork) && json_decode($editWork->images))
-                                    @foreach (json_decode($editWork->images) as $image)
+                                    @foreach (json_decode($editWork->images) as $index => $image)
                                         @if (Str::startsWith($image, ['http://', 'https://']))
-                                            <input type="url" name="image_links[]" class="w-full border border-gray-300 dark:border-gray-700 rounded-lg p-3 text-gray-900 dark:text-gray-100"
-                                                   placeholder="{{ __('أدخل رابط الصورة') }}" value="{{ $image }}">
+                                            <div class="relative flex items-center">
+                                                <input type="url" name="image_links[]" class="w-full border border-gray-300 dark:border-gray-700 rounded-lg p-3 text-gray-900 dark:text-gray-100"
+                                                       placeholder="{{ __('أدخل رابط الصورة') }}" value="{{ $image }}" data-preview-id="link-{{ $index }}">
+                                                <button type="button" class="remove-link absolute right-2 text-red-500 hover:text-red-700" data-preview-id="link-{{ $index }}">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                </button>
+                                            </div>
                                         @endif
                                     @endforeach
                                 @endif
-                                <input type="url" name="image_links[]" class="w-full border border-gray-300 dark:border-gray-700 rounded-lg p-3 text-gray-900 dark:text-gray-100"
-                                       placeholder="{{ __('أدخل رابط الصورة') }}">
+                                <div class="relative flex items-center">
+                                    <input type="url" name="image_links[]" class="w-full border border-gray-300 dark:border-gray-700 rounded-lg p-3 text-gray-900 dark:text-gray-100"
+                                           placeholder="{{ __('أدخل رابط الصورة') }}">
+                                    <button type="button" class="remove-link absolute right-2 text-red-500 hover:text-red-700 hidden">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
                             @error('image_links.*')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -71,13 +86,21 @@
                             </button>
                         </div>
 
-                        <!-- Display current images if editing -->
+                        <!-- Existing Images (if editing) -->
                         @if(isset($editWork) && json_decode($editWork->images))
                             <p class="text-xl mb-6">{{ __('الصور الحالية') }}</p>
-                            <div class="grid grid-cols-3 gap-4 mb-6">
-                                @foreach (json_decode($editWork->images) as $image)
-                                    <img src="{{ Str::startsWith($image, ['http://', 'https://']) ? $image : asset('storage/' . $image) }}"
-                                         alt="صورة حالية" class="w-full h-32 object-cover rounded-lg shadow-md">
+                            <div id="existingImages" class="grid grid-cols-3 gap-4 mb-6">
+                                @foreach (json_decode($editWork->images) as $index => $image)
+                                    <div class="relative" data-image-id="existing-{{ $index }}">
+                                        <img src="{{ Str::startsWith($image, ['http://', 'https://']) ? $image : asset('storage/' . $image) }}"
+                                             alt="{{ $editWork->title }}" class="w-full h-32 object-cover rounded-lg shadow-md">
+                                        <button type="button" class="remove-existing absolute top-2 right-2 text-red-500 hover:text-red-700 bg-white/80 rounded-full p-1"
+                                                data-image-id="existing-{{ $index }}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                        </button>
+                                    </div>
                                 @endforeach
                             </div>
                         @endif
@@ -95,12 +118,14 @@
                         @error('images.*')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
+
                         <div id="preview" class="grid grid-cols-3 gap-4 mt-6">
                             <!-- Preview images will be displayed here -->
                         </div>
+
                         <button type="submit"
                                 class="mt-6 bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg">
-                            {{ isset($editWork) ? __('تحديث العمل') : __('نشر العمل') }}
+                            {{ isset($editWork) ? __('نشر التعديلات') : __('نشر العمل') }}
                         </button>
                     </form>
                 </div>
@@ -108,7 +133,6 @@
         </div>
     </div>
 
-    <!-- Success Popup -->
     @if (session('success'))
         <div id="toast-notification"
              class="fixed bottom-4 right-4 bg-white dark:bg-purple-900 rounded-lg shadow-lg p-4 transform translate-y-full opacity-0 transition-all duration-300 z-50 max-w-md">
@@ -179,18 +203,33 @@
         const linkForm = document.getElementById('linkForm');
         const anotherLinkButton = document.getElementById('anotherLinkButton');
         const linkInputs = document.getElementById('linkInputs');
+        const existingImages = document.getElementById('existingImages');
 
         dropzone.addEventListener('click', () => imageInput.click());
 
         function handleFiles(files) {
-            Array.from(files).forEach(file => {
+            Array.from(files).forEach((file, index) => {
                 if (file.type.startsWith('image/')) {
                     const reader = new FileReader();
                     reader.onload = (e) => {
+                        const div = document.createElement('div');
+                        div.className = 'relative';
+                        div.dataset.imageId = `new-${index}-${Date.now()}`;
                         const img = document.createElement('img');
                         img.src = e.target.result;
                         img.className = 'w-full h-32 object-cover rounded-lg shadow-md';
-                        preview.appendChild(img);
+                        const button = document.createElement('button');
+                        button.type = 'button';
+                        button.className = 'remove-upload absolute top-2 right-2 text-red-500 hover:text-red-700 bg-white/80 rounded-full p-1';
+                        button.innerHTML = `
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        `;
+                        button.onclick = () => removeUploadedImage(div.dataset.imageId);
+                        div.appendChild(img);
+                        div.appendChild(button);
+                        preview.appendChild(div);
                     };
                     reader.readAsDataURL(file);
                 }
@@ -201,6 +240,12 @@
             event.preventDefault();
             const files = event.dataTransfer.files;
             handleFiles(files);
+        }
+
+        function removeUploadedImage(imageId) {
+            const div = preview.querySelector(`[data-image-id="${imageId}"]`);
+            if (div) div.remove();
+            imageInput.value = '';
         }
 
         // Toggle link form with animation
@@ -222,48 +267,88 @@
 
         // Add new link input and preview
         anotherLinkButton.addEventListener('click', () => {
+            const div = document.createElement('div');
+            div.className = 'relative flex items-center';
             const newInput = document.createElement('input');
             newInput.type = 'url';
             newInput.name = 'image_links[]';
             newInput.className = 'w-full border border-gray-300 dark:border-gray-700 rounded-lg p-3 text-gray-900 dark:text-gray-100';
             newInput.placeholder = '{{ __('أدخل رابط الصورة') }}';
-            linkInputs.appendChild(newInput);
-            bindLinkPreview(newInput);
+            const removeButton = document.createElement('button');
+            removeButton.type = 'button';
+            removeButton.className = 'remove-link absolute right-2 text-red-500 hover:text-red-700 hidden';
+            removeButton.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            `;
+            div.appendChild(newInput);
+            div.appendChild(removeButton);
+            linkInputs.appendChild(div);
+            bindLinkPreview(newInput, removeButton);
         });
 
         // Preview URLs
-        function bindLinkPreview(input) {
+        function bindLinkPreview(input, removeButton) {
             input.addEventListener('input', () => {
-                const existing = preview.querySelector(`img[data-url="${input.value}"]`);
-                if (existing) return;
+                const previewId = input.dataset.previewId || `link-${Date.now()}`;
+                input.dataset.previewId = previewId;
+                const existing = preview.querySelector(`[data-image-id="${previewId}"]`);
+                if (existing) existing.remove();
                 if (input.value && input.value.match(/\.(jpg|jpeg|png|gif)$/i)) {
+                    const div = document.createElement('div');
+                    div.className = 'relative';
+                    div.dataset.imageId = previewId;
                     const img = document.createElement('img');
                     img.src = input.value;
                     img.className = 'w-full h-32 object-cover rounded-lg shadow-md';
-                    img.dataset.url = input.value;
-                    img.onerror = () => img.remove();
-                    preview.appendChild(img);
+                    img.onerror = () => div.remove();
+                    const button = document.createElement('button');
+                    button.type = 'button';
+                    button.className = 'remove-url absolute top-2 right-2 text-red-500 hover:text-red-700 bg-white/80 rounded-full p-1';
+                    button.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    `;
+                    button.onclick = () => {
+                        div.remove();
+                        input.value = '';
+                        removeButton.classList.add('hidden');
+                    };
+                    div.appendChild(img);
+                    div.appendChild(button);
+                    preview.appendChild(div);
+                    removeButton.classList.remove('hidden');
+                } else {
+                    removeButton.classList.add('hidden');
                 }
+            });
+            removeButton.addEventListener('click', () => {
+                const div = preview.querySelector(`[data-image-id="${input.dataset.previewId}"]`);
+                if (div) div.remove();
+                input.value = '';
+                removeButton.classList.add('hidden');
+                input.parentElement.remove();
             });
         }
 
         // Bind preview to existing inputs
-        document.querySelectorAll('input[name="image_links[]"]').forEach(bindLinkPreview);
+        document.querySelectorAll('input[name="image_links[]"]').forEach(input => {
+            const removeButton = input.parentElement.querySelector('.remove-link');
+            bindLinkPreview(input, removeButton);
+        });
 
-        // Initial preview for existing URLs
-        @if(isset($editWork) && json_decode($editWork->images))
-            @foreach (json_decode($editWork->images) as $image)
-                @if (Str::startsWith($image, ['http://', 'https://']))
-                    (() => {
-                        const img = document.createElement('img');
-                        img.src = '{{ $image }}';
-                        img.className = 'w-full h-32 object-cover rounded-lg shadow-md';
-                        img.dataset.url = '{{ $image }}';
-                        img.onerror = () => img.remove();
-                        preview.appendChild(img);
-                    })();
-                @endif
-            @endforeach
-        @endif
+        // Remove existing images
+        if (existingImages) {
+            existingImages.addEventListener('click', (e) => {
+                if (e.target.closest('.remove-existing')) {
+                    const button = e.target.closest('.remove-existing');
+                    const imageId = button.dataset.imageId;
+                    const div = existingImages.querySelector(`[data-image-id="${imageId}"]`);
+                    if (div) div.remove();
+                }
+            });
+        }
     </script>
 </x-app-layout>

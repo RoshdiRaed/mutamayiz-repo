@@ -6,6 +6,7 @@ use App\Models\Work;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+
 class WorkController extends Controller
 {
     // Display a listing of all work
@@ -105,7 +106,7 @@ class WorkController extends Controller
         return redirect()->route('works.index')->with('success', 'تم تحديث العمل بنجاح');
     }
 
-    // Delete a specific work
+    // In WorkController.php
     public function destroy($id)
     {
         $work = Work::findOrFail($id);
@@ -119,13 +120,8 @@ class WorkController extends Controller
         }
 
         $work->delete();
-        return redirect()->route('works.index')->with('success', 'تم حذف العمل بنجاح');
-    }
 
-    // Show the details of a specific work
-    public function show($id)
-    {
-        $work = Work::findOrFail($id);
-        return view('works.show', compact('work'));
+        // Return JSON response with success message
+        return response()->json(['success' => 'تم حذف العمل بنجاح']);
     }
 }

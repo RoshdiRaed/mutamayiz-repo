@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    {{-- <head>
+
+    <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <link rel="icon" type="image/logo.png" href="/image/logo.png">
-        <title>{{ config('app.name', 'Laravel') }} Mutamayiz</title>
+        {{-- <title>{{ config('app.name', 'Laravel') }} Mutamayiz</title> --}}
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -13,7 +14,7 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head> --}}
+    </head>
     @extends('head')
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100 dark:bg-purple-800">

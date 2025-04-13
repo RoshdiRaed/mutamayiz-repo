@@ -1,5 +1,5 @@
 @extends('head')
-{{-- @extends('header') --}}
+@include('header')
 
 <link rel="icon" type="image/png" href="/image/logo.png">
 

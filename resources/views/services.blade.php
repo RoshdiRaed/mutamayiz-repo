@@ -62,9 +62,16 @@
                         </div>
                     </div>
 
+                    {{-- Modal --}}
                     <div id="modal-{{ $service->id }}" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-50">
                         <div class="bg-purple-900/90 p-6 rounded-lg max-w-2xl w-full relative max-h-[80vh] flex flex-col">
-                            <button onclick="closeModal('modal-{{ $service->id }}')" class="absolute top-2 right-2 text-yellow-300 text-2xl">×</button>
+                            <!-- Modified Close Button -->
+                            <button onclick="closeModal('modal-{{ $service->id }}')"
+                                    class="absolute top-3 right-3 bg-yellow-300 text-purple-900 w-8 h-8 flex items-center justify-center rounded-full text-lg font-bold hover:bg-yellow-400 transition"
+                                    aria-label="إغلاق">
+                                ×
+                            </button>
+
                             <h3 class="text-2xl font-semibold text-yellow-300 mb-4">{{ $service->title }}</h3>
                             <div class="overflow-y-auto flex-1">
                                 @foreach (json_decode($service->images) ?? ['image/default.png'] as $image)
@@ -103,4 +110,25 @@
             document.getElementById(id).classList.add('hidden');
         }
     </script>
+    <script>
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        // ⌨️ دعم زر Escape لإغلاق أي مودال مفتوح
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                document.querySelectorAll('[id^="modal-"]').forEach(modal => {
+                    if (!modal.classList.contains('hidden')) {
+                        modal.classList.add('hidden');
+                    }
+                });
+            }
+        });
+    </script>
+
 </body>
