@@ -4,17 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\Work;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 class WorkController extends Controller
 {
     // Display a listing of all work
     public function index()
     {
-        $works = Work::all() ?? collect();  // Ensure $works is never null
+        $works = Work::all() ?? collect();
         return view('works', compact('works'));
     }
 
-    // Show the form to create a new work or edit an existing one
+    // Show the form to create a new work
     public function create()
     {
         return view('newWork');
@@ -26,10 +27,13 @@ class WorkController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,,jpeg|max:10048',
+            'image_links.*' => ['nullable', 'url', 'regex:/\.(jpg|jpeg|png|gif)$/i'],
         ]);
 
+
         $imagePaths = [];
+
+        // Handle uploaded images
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 $path = $image->store('work', 'public');
@@ -37,14 +41,22 @@ class WorkController extends Controller
             }
         }
 
+        // Handle image links
+        if ($request->has('image_links')) {
+            foreach ($request->input('image_links') as $link) {
+                if (!empty($link)) {
+                    $imagePaths[] = $link;
+                }
+            }
+        }
+
         Work::create([
             'title' => $request->input('title'),
             'description' => $request->input('description'),
-            'images' => json_encode($imagePaths),
+            'images' => !empty($imagePaths) ? json_encode($imagePaths) : null,
         ]);
 
         return redirect()->route('works.index')->with('success', 'تم نشر العمل بنجاح');
-
     }
 
     // Show the form to edit a specific work
@@ -60,13 +72,14 @@ class WorkController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,jpeg|max:10048',
+            'image_links.*' => ['nullable', 'url', 'regex:/\.(jpg|jpeg|png|gif)(\?.*)?$/i'],
         ]);
 
         $work = Work::findOrFail($id);
 
-        // Handle image updates if necessary
         $imagePaths = json_decode($work->images, true) ?? [];
+
+        // Handle new uploaded images
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 $path = $image->store('work', 'public');
@@ -74,13 +87,22 @@ class WorkController extends Controller
             }
         }
 
+        // Handle new image links
+        if ($request->has('image_links')) {
+            foreach ($request->input('image_links') as $link) {
+                if (!empty($link)) {
+                    $imagePaths[] = $link;
+                }
+            }
+        }
+
         $work->update([
             'title' => $request->input('title'),
             'description' => $request->input('description'),
-            'images' => json_encode($imagePaths),
+            'images' => !empty($imagePaths) ? json_encode($imagePaths) : null,
         ]);
 
-        return redirect()->route('works.index')->with('success', 'تم حذف العمل بنجاح');
+        return redirect()->route('works.index')->with('success', 'تم تحديث العمل بنجاح');
     }
 
     // Delete a specific work
@@ -88,11 +110,11 @@ class WorkController extends Controller
     {
         $work = Work::findOrFail($id);
 
-        // Delete associated images
-        $imagePaths = json_decode($work->images, true);
+        // Delete associated images (only filesystem paths)
+        $imagePaths = json_decode($work->images, true) ?? [];
         foreach ($imagePaths as $path) {
-            if (file_exists(storage_path('app/public/' . $path))) {
-                unlink(storage_path('app/public/' . $path));
+            if (!Str::startsWith($path, ['http://', 'https://']) && Storage::disk('public')->exists($path)) {
+                Storage::disk('public')->delete($path);
             }
         }
 

@@ -4,7 +4,6 @@
 <link rel="icon" type="image/png" href="/image/logo.png">
 
 <body class="bg-gradient-to-br from-purple-900 to-purple-700 text-white font-arabic min-h-screen mt-20">
-
     <section class="py-16">
         <div class="container mx-auto px-4 text-center">
             <h2 class="text-4xl font-bold text-yellow-300 mb-10">أعمالنا</h2>
@@ -12,8 +11,18 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 @foreach ($works as $work)
                     <div class="relative group overflow-hidden rounded-lg shadow-lg aspect-square">
+                        <!-- Use first image from either images or image_urls -->
+                        @php
+                            $allImages = array_merge(
+                                json_decode($work->images, true) ?? [],
+                                json_decode($work->image_urls, true) ?? []
+                            );
+                            $firstImage = $allImages[0] ?? 'default.png';
+                        @endphp
                         <img
-                            src="{{ asset('storage/' . json_decode($work->images)[0] ?? 'default.jpg') }}"
+                            src="{{ Str::startsWith($firstImage, ['http://', 'https://'])
+                                    ? $firstImage
+                                    : asset('storage/' . $firstImage) }}"
                             alt="صورة {{ $work->title }}"
                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                         >
@@ -80,12 +89,31 @@
                     <div class="grid md:grid-cols-2 gap-6">
                         <!-- Main Image and Additional Images -->
                         <div class="space-y-4">
-                            <img src="{{ asset('storage/' . json_decode($work->images)[0] ?? 'default.jpg') }}" alt="الصورة الرئيسية - {{ $work->title }}" class="w-full h-auto object-cover rounded-lg shadow-md">
+                            <!-- Main Image -->
+                            @php
+                                $allImages = array_merge(
+                                    json_decode($work->images, true) ?? [],
+                                    json_decode($work->image_urls, true) ?? []
+                                );
+                                $firstImage = $allImages[0] ?? 'default.jpg';
+                            @endphp
+                            <img
+                                src="{{ Str::startsWith($firstImage, ['http://', 'https://'])
+                                        ? $firstImage
+                                        : asset('storage/' . $firstImage) }}"
+                                alt="الصورة الرئيسية - {{ $work->title }}"
+                                class="w-full h-auto object-cover rounded-lg shadow-md"
+                            >
 
-                            @if (count(json_decode($work->images)) > 1)
+                            <!-- Additional Images -->
+                            @if (count($allImages) > 1)
                                 <div class="grid grid-cols-2 gap-2">
-                                    @foreach (array_slice(json_decode($work->images), 1) as $image)
-                                        <img src="{{ asset('storage/' . $image) }}" alt="صورة إضافية" class="rounded-lg shadow-md hover:scale-105 transition-transform duration-200">
+                                    @foreach (array_slice($allImages, 1) as $image)
+                                        <img
+                                            src="{{ Str::startsWith($image, ['http://', 'https://']) ? $image : asset('storage/' . $image) }}"
+                                            alt="صورة إضافية"
+                                            class="rounded-lg shadow-md hover:scale-105 transition-transform duration-200"
+                                        >
                                     @endforeach
                                 </div>
                             @endif
