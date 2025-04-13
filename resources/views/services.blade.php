@@ -1,10 +1,8 @@
 @extends('head')
-<link rel="icon" type="image/logo.png" href="/image/logo.png">
+<link rel="icon" type="image/png" href="/image/logo.png">
 
 <body class="bg-gradient-to-br from-purple-900 to-purple-700 text-white font-arabic min-h-screen mt-24">
-
     <section class="py-16 relative overflow-hidden">
-        {{-- Background Decorations --}}
         <div class="absolute inset-0">
             <div class="absolute top-0 right-0 w-72 h-72 bg-yellow-300/10 rounded-full blur-3xl"></div>
             <div class="absolute bottom-0 left-0 w-72 h-72 bg-purple-600/20 rounded-full blur-3xl"></div>
@@ -18,20 +16,20 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 @foreach ($services as $service)
-                    {{-- Service Card --}}
                     <div class="group relative">
                         <div class="absolute inset-0 bg-gradient-to-r from-yellow-400/20 to-purple-600/20 rounded-xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
                         <div class="relative p-8 bg-purple-900/80 backdrop-blur-sm rounded-xl shadow-xl transform transition duration-500 hover:-translate-y-2 border border-purple-800/50 hover:border-yellow-300/50">
                             @if ($service->created_at->diffInDays(now()) <= 7)
-                                {{-- New Tag --}}
                                 <span class="absolute top-3 left-3 bg-gradient-to-r from-yellow-300 to-yellow-500 text-purple-900 text-xs font-semibold px-4 py-1.5 rounded-full shadow-md transform -rotate-3 z-10 transition-all duration-300 hover:scale-105 hover:shadow-lg">
                                     خدمة جديدة
                                 </span>
                             @endif
 
                             <div class="mb-6 h-64 overflow-hidden rounded-lg relative">
-                                <img src="{{ asset('storage/' . (json_decode($service->images)[0] ?? 'image/default.png')) }}"
+                                <img src="{{ Str::startsWith(json_decode($service->images)[0] ?? 'image/default.png', ['http://', 'https://'])
+                                            ? json_decode($service->images)[0]
+                                            : asset('storage/' . (json_decode($service->images)[0] ?? 'image/default.png')) }}"
                                      alt="{{ $service->title }}"
                                      class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110">
                             </div>
@@ -64,14 +62,13 @@
                         </div>
                     </div>
 
-                    {{-- Modal --}}
                     <div id="modal-{{ $service->id }}" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-50">
                         <div class="bg-purple-900/90 p-6 rounded-lg max-w-2xl w-full relative max-h-[80vh] flex flex-col">
                             <button onclick="closeModal('modal-{{ $service->id }}')" class="absolute top-2 right-2 text-yellow-300 text-2xl">×</button>
                             <h3 class="text-2xl font-semibold text-yellow-300 mb-4">{{ $service->title }}</h3>
                             <div class="overflow-y-auto flex-1">
-                                @foreach (json_decode($service->images) ?? ['image/ser2.jpg'] as $image)
-                                    <img src="{{ asset('storage/' . $image) }}"
+                                @foreach (json_decode($service->images) ?? ['image/default.png'] as $image)
+                                    <img src="{{ Str::startsWith($image, ['http://', 'https://']) ? $image : asset('storage/' . $image) }}"
                                          alt="{{ $service->title }}"
                                          class="w-full h-auto object-cover rounded-lg mb-2">
                                 @endforeach
@@ -82,7 +79,6 @@
                 @endforeach
             </div>
 
-            {{-- Call to Action --}}
             <div class="mt-16">
                 <h3 class="text-3xl font-bold text-yellow-300 mb-4">هل أنت جاهز للبدء؟</h3>
                 <p class="text-gray-300 text-lg mb-6">تواصل معنا الآن للحصول على استشارة مجانية ومناقشة احتياجاتك.</p>
@@ -98,7 +94,6 @@
         </div>
     </section>
 
-    {{-- Modal Script --}}
     <script>
         function openModal(id) {
             document.getElementById(id).classList.remove('hidden');
@@ -108,5 +103,4 @@
             document.getElementById(id).classList.add('hidden');
         }
     </script>
-
 </body>
