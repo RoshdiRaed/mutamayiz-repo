@@ -1,7 +1,7 @@
-@extends('head')
-@include('header')
+@extends('layouts.head')
 
-<link rel="icon" type="image/png" href="/image/logo.png">
+@section('title', 'أعمالنا')
+
 
 <body class="bg-gradient-to-br from-purple-900 to-purple-700 text-white font-arabic min-h-screen mt-20">
     <section class="py-16">
@@ -176,4 +176,5 @@
             closeModal(id);
         }
     </script>
+
 </body>

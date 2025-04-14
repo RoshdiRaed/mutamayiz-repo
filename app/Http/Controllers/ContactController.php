@@ -9,16 +9,12 @@ class ContactController extends Controller
 {
     public function index()
     {
-        // Paginate the contacts to show only 15 per page
         $contacts = Contact::latest()->paginate(12);
-
-        // Return the view with the paginated contacts
-        return view('showContact', compact('contacts'));
+        return view('pages.contact.show', compact('contacts'));
     }
 
     public function store(Request $request)
     {
-        // Validate the form data
         $validated = $request->validate([
             'full_name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
@@ -27,10 +23,8 @@ class ContactController extends Controller
             'message' => 'required|string',
         ]);
 
-        // Store the data in the database
         Contact::create($validated);
 
-        // Redirect back with a success message
         return redirect()->back()->with('success', 'تم إرسال رسالتك بنجاح!');
     }
 }

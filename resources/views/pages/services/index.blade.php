@@ -1,5 +1,5 @@
-@extends('head')
-<link rel="icon" type="image/png" href="/image/logo.png">
+@extends('layouts.head')
+@section('title', 'خدماتنا')
 
 <body class="bg-gradient-to-br from-purple-900 to-purple-700 text-white font-arabic min-h-screen mt-24">
     <section class="py-16 relative overflow-hidden">
@@ -13,6 +13,15 @@
             <p class="text-gray-300 text-lg mb-8 leading-relaxed">
                 نقدم مجموعة متنوعة من الخدمات التي تساعدك على تحقيق أهدافك التجارية بأعلى مستويات الاحترافية.
             </p>
+
+            <!-- Image Upload Section (Visible only for authenticated users editing/creating services) -->
+            @auth
+                <div class="mb-8">
+                    <label for="imageInput" class="block text-yellow-300 text-lg font-semibold mb-2">تحميل الصور</label>
+                    <input type="file" id="imageInput" multiple accept="image/*" class="block w-full text-gray-200 bg-purple-800/50 p-2 rounded-lg border border-yellow-300/50 hover:border-yellow-400 transition" onchange="handleFiles(this.files)">
+                    <div id="preview" class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+                </div>
+            @endauth
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 @foreach ($services as $service)
@@ -62,10 +71,9 @@
                         </div>
                     </div>
 
-                    {{-- Modal --}}
+                    <!-- Modal -->
                     <div id="modal-{{ $service->id }}" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-50">
                         <div class="bg-purple-900/90 p-6 rounded-lg max-w-2xl w-full relative max-h-[80vh] flex flex-col">
-                            <!-- Modified Close Button -->
                             <button onclick="closeModal('modal-{{ $service->id }}')"
                                     class="absolute top-3 right-3 bg-yellow-300 text-purple-900 w-8 h-8 flex items-center justify-center rounded-full text-lg font-bold hover:bg-yellow-400 transition"
                                     aria-label="إغلاق">
@@ -109,17 +117,47 @@
         function closeModal(id) {
             document.getElementById(id).classList.add('hidden');
         }
-    </script>
-    <script>
-        function openModal(id) {
-            document.getElementById(id).classList.remove('hidden');
+
+        // Handle uploaded image files
+        function handleFiles(files) {
+            const preview = document.getElementById("preview");
+            preview.innerHTML = ""; // Clear previous previews
+
+            Array.from(files).forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const container = document.createElement("div");
+                    container.classList.add("relative");
+                    container.innerHTML = `
+                        <img src="${e.target.result}" class="w-full h-32 object-cover rounded-lg shadow-md">
+                        <button type="button" class="remove-uploaded absolute top-2 right-2 text-red-500 hover:text-red-700 bg-white/80 rounded-full p-1" data-index="${index}">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    `;
+                    preview.appendChild(container);
+                };
+                reader.readAsDataURL(file);
+            });
+
+            // Store the files temporarily
+            window.currentFiles = files;
         }
 
-        function closeModal(id) {
-            document.getElementById(id).classList.add('hidden');
-        }
+        // Remove uploaded preview image
+        document.addEventListener("click", function (e) {
+            if (e.target.closest(".remove-uploaded")) {
+                const index = parseInt(e.target.closest(".remove-uploaded").dataset.index);
+                const newFiles = Array.from(window.currentFiles).filter((_, i) => i !== index);
+                const dataTransfer = new DataTransfer();
+                newFiles.forEach(file => dataTransfer.items.add(file));
+                document.getElementById("imageInput").files = dataTransfer.files;
+                handleFiles(dataTransfer.files); // Re-render
+            }
+        });
 
-        // ⌨️ دعم زر Escape لإغلاق أي مودال مفتوح
+        // Support Escape key to close modals
         document.addEventListener('keydown', function (event) {
             if (event.key === 'Escape') {
                 document.querySelectorAll('[id^="modal-"]').forEach(modal => {
@@ -130,5 +168,4 @@
             }
         });
     </script>
-
 </body>

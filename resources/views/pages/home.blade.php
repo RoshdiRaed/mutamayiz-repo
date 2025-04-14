@@ -1,32 +1,32 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    @include('head')
+    @include('layouts.head')
     <link rel="icon" type="image/png" href="/image/logo.png">
 </head>
 
 <body class="bg-gradient-to-br from-purple-900 to-purple-700 text-white font-arabic min-h-screen">
 
     {{-- NAVBAR --}}
-    @include('header')
+    @include('layouts.header')
 
     {{-- HERO --}}
-    @include('hero')
+    @include('partials.hero')
 
     {{-- Our Inspiring Story --}}
-    @include('story')
+    @include('pages.story')
 
     {{-- SERVICES --}}
-    @include('services')
+    @include('pages.services.index')
 
     {{-- PORTFOLIO --}}
-    @include('works')
+    @include('pages.works.index')
 
     {{-- Contact Us --}}
-    @include('contact')
+    @include('pages.contact.index')
 
     {{-- FOOTER --}}
-    @include('footer')
+    @include('layouts.footer')
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
 

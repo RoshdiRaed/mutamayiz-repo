@@ -12,18 +12,12 @@ class ServicesController extends Controller
     public function index()
     {
         $services = Service::all();
-        return view('services', compact('services'));
-    }
-
-    public function indexone()
-    {
-        $services = Service::all();
-        return view('home', compact('services'));
+        return view('pages.services.index', compact('services'));
     }
 
     public function create()
     {
-        return view('newServices');
+        return view('pages.services.new');
     }
 
     public function store(Request $request)
@@ -37,7 +31,6 @@ class ServicesController extends Controller
 
         $imagePaths = [];
 
-        // Handle uploaded images
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 $path = $image->store('services', 'public');
@@ -45,7 +38,6 @@ class ServicesController extends Controller
             }
         }
 
-        // Handle image links
         if ($request->has('image_links')) {
             foreach ($request->input('image_links') as $link) {
                 if (!empty($link)) {
@@ -66,13 +58,13 @@ class ServicesController extends Controller
     public function show($id)
     {
         $service = Service::findOrFail($id);
-        return view('services.show', compact('service'));
+        return view('pages.services.show', compact('service'));
     }
 
     public function edit($id)
     {
         $service = Service::findOrFail($id);
-        return view('newServices', compact('service'));
+        return view('pages.services.new', compact('service'));
     }
 
     public function update(Request $request, $id)
@@ -88,7 +80,6 @@ class ServicesController extends Controller
 
         $newImages = [];
 
-        // رفع الصور الجديدة
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 $path = $image->store('services', 'public');
@@ -96,7 +87,6 @@ class ServicesController extends Controller
             }
         }
 
-        // روابط الصور الجديدة
         if ($request->has('image_links')) {
             foreach ($request->input('image_links') as $link) {
                 if (!empty($link)) {
@@ -105,7 +95,6 @@ class ServicesController extends Controller
             }
         }
 
-        // دمج الصور القديمة التي لم تُحذف يدويًا مع الصور الجديدة
         $existingImages = $request->input('existing_images', []);
         $finalImages = array_merge($existingImages, $newImages);
 
@@ -122,7 +111,6 @@ class ServicesController extends Controller
     {
         $service = Service::findOrFail($id);
 
-        // Delete associated images
         $imagePaths = json_decode($service->images, true) ?? [];
         foreach ($imagePaths as $path) {
             if (!Str::startsWith($path, ['http://', 'https://']) && Storage::disk('public')->exists($path)) {

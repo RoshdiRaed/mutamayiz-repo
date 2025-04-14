@@ -1,5 +1,5 @@
-@include('head')
-@extends('header')
+@include('layouts.head')
+@extends('layouts.header')
 
 <script>
     document.getElementById('mobile-menu-toggle').addEventListener('click', function () {
