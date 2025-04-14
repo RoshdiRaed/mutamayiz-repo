@@ -25,11 +25,13 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/services/{service}', [ServicesController::class, 'update'])->name('services.update');
     Route::delete('/services/{service}', [ServicesController::class, 'destroy'])->name('services.destroy');
 
-    // Works Routes
-    Route::resource('works', WorkController::class)->except(['show']);
+
     // contacts
     Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index');
 });
+
+// Works Routes
+Route::resource('works', WorkController::class)->except(['show']);
 
 Route::get('/services', [ServicesController::class, 'index'])->name('services.index');
 Route::post('/contacts', [ContactController::class, 'store'])->name('contacts.store');
