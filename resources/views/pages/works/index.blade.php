@@ -29,10 +29,10 @@
 
                         <div class="absolute inset-0 bg-purple-900 bg-opacity-80 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4 text-white">
                             <h3 class="text-2xl font-bold text-yellow-300 mb-2">{{ $work->title }}</h3>
-                            <p class="text-sm mb-4">{{ Str::limit($work->description, 100) }}</p>
+                            <p class="text-sm mb-4 leading-relaxed">{{ Str::limit($work->description, 100) }}</p>
 
-                            <button onclick="openModal('modal-{{ $work->id }}')" class="text-yellow-300 hover:underline">
-                                تفاصيل المشروع
+                            <button onclick="openModal('modal-{{ $work->id }}')" class="bg-yellow-400 text-purple-900 px-4 py-2 rounded-lg font-bold hover:bg-yellow-500 transition duration-300 transform hover:scale-105">
+                                عرض التفاصيل
                             </button>
 
                             @auth

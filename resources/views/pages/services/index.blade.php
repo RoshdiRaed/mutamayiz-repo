@@ -14,15 +14,6 @@
                 نقدم مجموعة متنوعة من الخدمات التي تساعدك على تحقيق أهدافك التجارية بأعلى مستويات الاحترافية.
             </p>
 
-            <!-- Image Upload Section (Visible only for authenticated users editing/creating services) -->
-            @auth
-                <div class="mb-8">
-                    <label for="imageInput" class="block text-yellow-300 text-lg font-semibold mb-2">تحميل الصور</label>
-                    <input type="file" id="imageInput" multiple accept="image/*" class="block w-full text-gray-200 bg-purple-800/50 p-2 rounded-lg border border-yellow-300/50 hover:border-yellow-400 transition" onchange="handleFiles(this.files)">
-                    <div id="preview" class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4"></div>
-                </div>
-            @endauth
-
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 @foreach ($services as $service)
                     <div class="group relative">
